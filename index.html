@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dental Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body data-page="list">
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="title-block">
+          <div class="brand-mark">RC</div>
+          <div>
+            <h1>Root Canal Tracker</h1>
+            <p class="subtle">Next appointment comes first.</p>
+          </div>
+        </div>
+        <div id="userBar" class="user-bar hidden">
+          <span id="userName"></span>
+          <button type="button" id="signOutBtn" class="ghost">Sign out</button>
+        </div>
+      </header>
+
+      <section id="authSection" class="panel auth-panel">
+        <h2>Doctor Access</h2>
+        <div class="auth-grid">
+          <form id="loginForm" class="card">
+            <h3>Log in</h3>
+            <label class="field">
+              <span>Email</span>
+              <input
+                type="email"
+                id="loginEmail"
+                placeholder="doctor@email.com"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input
+                type="password"
+                id="loginPassword"
+                placeholder="At least 6 characters"
+                required
+              />
+            </label>
+            <button type="submit" class="primary">Log in</button>
+            <p id="loginError" class="form-error" aria-live="polite"></p>
+          </form>
+
+          <form id="signupForm" class="card">
+            <h3>Create account</h3>
+            <label class="field">
+              <span>Doctor name</span>
+              <input
+                type="text"
+                id="signupName"
+                placeholder="Dr. Rahman"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Email</span>
+              <input
+                type="email"
+                id="signupEmail"
+                placeholder="doctor@email.com"
+                required
+              />
+            </label>
+            <label class="field">
+              <span>Password</span>
+              <input
+                type="password"
+                id="signupPassword"
+                placeholder="At least 6 characters"
+                required
+              />
+            </label>
+            <button type="submit" class="primary">Sign up</button>
+            <p id="signupError" class="form-error" aria-live="polite"></p>
+          </form>
+        </div>
+        <p class="note">Login stays on this device unless you sign out.</p>
+      </section>
+
+      <section id="appSection" class="hidden">
+        <div class="toolbar">
+          <label class="search-field">
+            <span class="sr-only">Search patients</span>
+            <input
+              type="search"
+              id="searchInput"
+              placeholder="Search patient names"
+            />
+          </label>
+          <div class="segmented" id="statusFilters">
+            <button class="seg-btn active" data-filter="active">Active</button>
+            <button class="seg-btn" data-filter="completed">Completed</button>
+            <button class="seg-btn" data-filter="all">All</button>
+          </div>
+        </div>
+        <p id="listStatus" class="note"></p>
+        <div id="patientList" class="patient-list"></div>
+      </section>
+    </div>
+
+    <a
+      id="addPatientFab"
+      class="fab hidden"
+      href="add.html"
+      aria-label="Add patient"
+    >
+      +
+    </a>
+
+    <script src="app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>New Patient</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;700&family=Manrope:wght@400;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+  <body data-page="add">
+    <div class="app-shell">
+      <header class="page-header">
+        <a class="back-link" href="index.html">Back</a>
+        <div>
+          <h1>New Patient</h1>
+          <p class="subtle">Capture the next appointment and visit notes.</p>
+        </div>
+        <div id="userBar" class="user-bar hidden">
+          <span id="userName"></span>
+          <button type="button" id="signOutBtn" class="ghost">Sign out</button>
+        </div>
+      </header>
+
+      <section class="panel">
+        <form id="patientForm" class="form-stack">
+          <label class="field">
+            <span>Patient name</span>
+            <input
+              type="text"
+              id="patientName"
+              placeholder="Patient Name"
+              required
+            />
+          </label>
+
+          <div class="form-grid">
+            <label class="field">
+              <span>Status</span>
+              <select id="status">
+                <option value="active">Active</option>
+                <option value="completed">Completed</option>
+              </select>
+            </label>
+            <label class="field">
+              <span>Next appointment</span>
+              <input type="datetime-local" id="appointmentDate" required />
+            </label>
+          </div>
+
+          <div class="field">
+            <span>Tooth selection</span>
+            <div
+              class="tooth-picker"
+              data-position-id="toothPosition"
+              data-number-id="toothNumber"
+            >
+              <input type="hidden" id="toothPosition" />
+              <input type="hidden" id="toothNumber" />
+              <div class="tooth-grid">
+                <div class="tooth-quadrant">
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="8"
+                    aria-label="Upper left 8"
+                  >
+                    8
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="7"
+                    aria-label="Upper left 7"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="6"
+                    aria-label="Upper left 6"
+                  >
+                    6
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="5"
+                    aria-label="Upper left 5"
+                  >
+                    5
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="4"
+                    aria-label="Upper left 4"
+                  >
+                    4
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="3"
+                    aria-label="Upper left 3"
+                  >
+                    3
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="2"
+                    aria-label="Upper left 2"
+                  >
+                    2
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UL"
+                    data-number="1"
+                    aria-label="Upper left 1"
+                  >
+                    1
+                  </button>
+                </div>
+                <div class="tooth-quadrant">
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="1"
+                    aria-label="Upper right 1"
+                  >
+                    1
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="2"
+                    aria-label="Upper right 2"
+                  >
+                    2
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="3"
+                    aria-label="Upper right 3"
+                  >
+                    3
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="4"
+                    aria-label="Upper right 4"
+                  >
+                    4
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="5"
+                    aria-label="Upper right 5"
+                  >
+                    5
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="6"
+                    aria-label="Upper right 6"
+                  >
+                    6
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="7"
+                    aria-label="Upper right 7"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="UR"
+                    data-number="8"
+                    aria-label="Upper right 8"
+                  >
+                    8
+                  </button>
+                </div>
+                <div class="tooth-quadrant">
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="8"
+                    aria-label="Lower left 8"
+                  >
+                    8
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="7"
+                    aria-label="Lower left 7"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="6"
+                    aria-label="Lower left 6"
+                  >
+                    6
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="5"
+                    aria-label="Lower left 5"
+                  >
+                    5
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="4"
+                    aria-label="Lower left 4"
+                  >
+                    4
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="3"
+                    aria-label="Lower left 3"
+                  >
+                    3
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="2"
+                    aria-label="Lower left 2"
+                  >
+                    2
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="1"
+                    aria-label="Lower left 1"
+                  >
+                    1
+                  </button>
+                </div>
+                <div class="tooth-quadrant">
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="1"
+                    aria-label="Lower right 1"
+                  >
+                    1
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="2"
+                    aria-label="Lower right 2"
+                  >
+                    2
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="3"
+                    aria-label="Lower right 3"
+                  >
+                    3
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="4"
+                    aria-label="Lower right 4"
+                  >
+                    4
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="5"
+                    aria-label="Lower right 5"
+                  >
+                    5
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="6"
+                    aria-label="Lower right 6"
+                  >
+                    6
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="7"
+                    aria-label="Lower right 7"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LR"
+                    data-number="8"
+                    aria-label="Lower right 8"
+                  >
+                    8
+                  </button>
+                </div>
+              </div>
+              <p class="tooth-preview" data-tooth-preview>Selected: Not set</p>
+            </div>
+          </div>
+
+          <label class="field">
+            <span>Visit date (optional)</span>
+            <input type="datetime-local" id="visitDate" />
+          </label>
+
+          <div class="task-card">
+            <h3>Root Canal Tasks</h3>
+            <div class="checkbox-grid">
+              <label class="checkbox">
+                <input type="checkbox" id="task1" />
+                <span>Access Cavity & Pulp Removal</span>
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id="task2" />
+                <span>Working Length Determination</span>
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id="task3" />
+                <span>Cleaning & Shaping</span>
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id="task4" />
+                <span>Obturation</span>
+              </label>
+              <label class="checkbox">
+                <input type="checkbox" id="task5" />
+                <span>Filling</span>
+              </label>
+            </div>
+            <label class="field">
+              <span>Length notes</span>
+              <textarea
+                id="lengthNotes"
+                rows="3"
+                placeholder="Canal lengths, files used, key notes"
+              ></textarea>
+            </label>
+          </div>
+
+          <label class="field">
+            <span>Clinical notes</span>
+            <textarea
+              id="clinicalNotes"
+              rows="4"
+              placeholder="Pain level, findings, medications, follow-up notes"
+            ></textarea>
+          </label>
+
+          <label class="field">
+            <span>Patient photos</span>
+            <input type="file" id="patientPhotos" accept="image/*" multiple />
+            <small>Upload multiple images (x-ray, intra-oral photos).</small>
+          </label>
+
+          <div class="form-actions">
+            <button type="submit" id="saveBtn" class="primary">
+              Save patient
+            </button>
+            <span id="saveStatus" class="save-status"></span>
+          </div>
+        </form>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
