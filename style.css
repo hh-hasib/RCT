@@ -457,6 +457,16 @@ textarea:focus {
   padding: 10px 14px;
   border-radius: 999px;
   cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ghost.disabled,
+.ghost[aria-disabled="true"] {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .save-status,

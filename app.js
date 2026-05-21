@@ -536,6 +536,8 @@ function initAddPage() {
     }
 
     const tasks = readTasks();
+    const phone = document.getElementById("patientPhone").value.trim();
+    const address = document.getElementById("patientAddress").value.trim();
     const lengthNotes = document.getElementById("lengthNotes").value.trim();
     const clinicalNotes = document.getElementById("clinicalNotes").value.trim();
     const visitValue = document.getElementById("visitDate").value;
@@ -563,6 +565,8 @@ function initAddPage() {
       appointment_at: appointmentDate.toISOString(),
       tooth_position: document.getElementById("toothPosition").value,
       tooth_number: document.getElementById("toothNumber").value,
+      phone,
+      address,
       tasks,
       length_notes: lengthNotes,
       clinical_notes: clinicalNotes,
@@ -662,6 +666,8 @@ function populateEditForm(patient) {
   const editAppointmentDate = document.getElementById("editAppointmentDate");
   const editToothPosition = document.getElementById("editToothPosition");
   const editToothNumber = document.getElementById("editToothNumber");
+  const editPatientPhone = document.getElementById("editPatientPhone");
+  const editPatientAddress = document.getElementById("editPatientAddress");
 
   if (editPatientName) {
     editPatientName.value = patient.name || "";
@@ -680,6 +686,12 @@ function populateEditForm(patient) {
   if (editToothNumber) {
     editToothNumber.value = patient.tooth_number || "";
   }
+  if (editPatientPhone) {
+    editPatientPhone.value = patient.phone || "";
+  }
+  if (editPatientAddress) {
+    editPatientAddress.value = patient.address || "";
+  }
 
   syncToothPicker("editToothPosition", "editToothNumber");
 }
@@ -690,6 +702,9 @@ function renderPatientDetail(patient) {
   const patientStatus = document.getElementById("patientStatus");
   const patientAppointment = document.getElementById("patientAppointment");
   const patientTooth = document.getElementById("patientTooth");
+  const patientPhone = document.getElementById("patientPhone");
+  const patientAddress = document.getElementById("patientAddress");
+  const callPatientBtn = document.getElementById("callPatientBtn");
   const photoStrip = document.getElementById("photoStrip");
 
   if (patientTitle) {
@@ -712,6 +727,27 @@ function renderPatientDetail(patient) {
       patient.tooth_position,
       patient.tooth_number,
     );
+  }
+
+  const phoneValue = patient.phone ? patient.phone.trim() : "";
+  const addressValue = patient.address ? patient.address.trim() : "";
+  if (patientPhone) {
+    patientPhone.textContent = phoneValue || "Not set";
+  }
+  if (patientAddress) {
+    patientAddress.textContent = addressValue || "Not set";
+  }
+  if (callPatientBtn) {
+    if (phoneValue) {
+      const normalized = phoneValue.replace(/[^\d+]/g, "");
+      callPatientBtn.href = `tel:${normalized || phoneValue}`;
+      callPatientBtn.classList.remove("disabled");
+      callPatientBtn.setAttribute("aria-disabled", "false");
+    } else {
+      callPatientBtn.href = "#";
+      callPatientBtn.classList.add("disabled");
+      callPatientBtn.setAttribute("aria-disabled", "true");
+    }
   }
 
   renderPhotoStrip(photoStrip, patient.photos || []);
@@ -817,6 +853,8 @@ function initDetailPage() {
         appointment_at: appointmentDate.toISOString(),
         tooth_position: document.getElementById("editToothPosition").value,
         tooth_number: document.getElementById("editToothNumber").value,
+        phone: document.getElementById("editPatientPhone").value.trim(),
+        address: document.getElementById("editPatientAddress").value.trim(),
         updated_at: new Date().toISOString(),
       };
 

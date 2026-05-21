@@ -41,12 +41,21 @@
             <span class="label">Tooth</span>
             <strong id="patientTooth"></strong>
           </div>
+          <div>
+            <span class="label">Phone</span>
+            <strong id="patientPhone"></strong>
+          </div>
+          <div>
+            <span class="label">Address</span>
+            <strong id="patientAddress"></strong>
+          </div>
         </div>
         <div id="photoStrip" class="patient-photos"></div>
         <div class="summary-actions">
           <button type="button" id="toggleEditBtn" class="ghost">
             Edit patient
           </button>
+          <a id="callPatientBtn" class="ghost" href="#">Call patient</a>
           <button type="button" id="deletePatientBtn" class="danger">
             Delete patient
           </button>
@@ -76,6 +85,21 @@
             </label>
           </div>
 
+          <div class="form-grid">
+            <label class="field">
+              <span>Patient phone</span>
+              <input type="tel" id="editPatientPhone" />
+            </label>
+            <label class="field">
+              <span>Patient address</span>
+              <textarea
+                id="editPatientAddress"
+                rows="2"
+                placeholder="Street, city"
+              ></textarea>
+            </label>
+          </div>
+
           <div class="field">
             <span>Tooth selection</span>
             <div
@@ -86,80 +110,6 @@
               <input type="hidden" id="editToothPosition" />
               <input type="hidden" id="editToothNumber" />
               <div class="tooth-grid">
-                <div class="tooth-quadrant">
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="8"
-                    aria-label="Upper left 8"
-                  >
-                    8
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="7"
-                    aria-label="Upper left 7"
-                  >
-                    7
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="6"
-                    aria-label="Upper left 6"
-                  >
-                    6
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="5"
-                    aria-label="Upper left 5"
-                  >
-                    5
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="4"
-                    aria-label="Upper left 4"
-                  >
-                    4
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="3"
-                    aria-label="Upper left 3"
-                  >
-                    3
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="2"
-                    aria-label="Upper left 2"
-                  >
-                    2
-                  </button>
-                  <button
-                    type="button"
-                    class="tooth-btn"
-                    data-position="UL"
-                    data-number="1"
-                    aria-label="Upper left 1"
-                  >
-                    1
-                  </button>
-                </div>
                 <div class="tooth-quadrant">
                   <button
                     type="button"
@@ -238,72 +188,72 @@
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="8"
-                    aria-label="Lower left 8"
+                    aria-label="Upper left 8"
                   >
                     8
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="7"
-                    aria-label="Lower left 7"
+                    aria-label="Upper left 7"
                   >
                     7
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="6"
-                    aria-label="Lower left 6"
+                    aria-label="Upper left 6"
                   >
                     6
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="5"
-                    aria-label="Lower left 5"
+                    aria-label="Upper left 5"
                   >
                     5
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="4"
-                    aria-label="Lower left 4"
+                    aria-label="Upper left 4"
                   >
                     4
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="3"
-                    aria-label="Lower left 3"
+                    aria-label="Upper left 3"
                   >
                     3
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="2"
-                    aria-label="Lower left 2"
+                    aria-label="Upper left 2"
                   >
                     2
                   </button>
                   <button
                     type="button"
                     class="tooth-btn"
-                    data-position="LL"
+                    data-position="UL"
                     data-number="1"
-                    aria-label="Lower left 1"
+                    aria-label="Upper left 1"
                   >
                     1
                   </button>
@@ -380,6 +330,80 @@
                     aria-label="Lower right 8"
                   >
                     8
+                  </button>
+                </div>
+                <div class="tooth-quadrant">
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="8"
+                    aria-label="Lower left 8"
+                  >
+                    8
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="7"
+                    aria-label="Lower left 7"
+                  >
+                    7
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="6"
+                    aria-label="Lower left 6"
+                  >
+                    6
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="5"
+                    aria-label="Lower left 5"
+                  >
+                    5
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="4"
+                    aria-label="Lower left 4"
+                  >
+                    4
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="3"
+                    aria-label="Lower left 3"
+                  >
+                    3
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="2"
+                    aria-label="Lower left 2"
+                  >
+                    2
+                  </button>
+                  <button
+                    type="button"
+                    class="tooth-btn"
+                    data-position="LL"
+                    data-number="1"
+                    aria-label="Lower left 1"
+                  >
+                    1
                   </button>
                 </div>
               </div>
