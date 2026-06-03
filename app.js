@@ -105,6 +105,22 @@ function setStatusText(id, message) {
   }
 }
 
+function setAppointmentFieldState(inputId, statusValue) {
+  const input = document.getElementById(inputId);
+  if (!input) {
+    return;
+  }
+
+  const isCompleted = statusValue === "completed";
+  input.disabled = isCompleted;
+  input.required = !isCompleted;
+
+  const field = input.closest(".field");
+  if (field) {
+    field.classList.toggle("is-disabled", isCompleted);
+  }
+}
+
 function formatAppointment(appointmentAt) {
   if (!appointmentAt) {
     return "Not set";
@@ -141,6 +157,27 @@ function formatTooth(position, number) {
 
   const label = `${map[position] || ""} ${number || ""}`.trim();
   return label || "Not selected";
+}
+
+function normalizeStatus(status) {
+  if (status === "completed") {
+    return "completed";
+  }
+  if (status === "pending") {
+    return "pending";
+  }
+  return "active";
+}
+
+function formatStatusLabel(status) {
+  const normalized = normalizeStatus(status);
+  if (normalized === "completed") {
+    return "Completed";
+  }
+  if (normalized === "pending") {
+    return "Pending";
+  }
+  return "Active";
 }
 
 function readTasks(prefix = "") {
@@ -298,9 +335,9 @@ function createPatientCard(patient) {
 
   const status = document.createElement("span");
   status.className = "status-chip";
-  status.dataset.status =
-    patient.status === "completed" ? "completed" : "active";
-  status.textContent = patient.status === "completed" ? "Completed" : "Active";
+  const statusValue = normalizeStatus(patient.status);
+  status.dataset.status = statusValue;
+  status.textContent = formatStatusLabel(statusValue);
 
   header.appendChild(title);
   header.appendChild(status);
@@ -499,9 +536,18 @@ function initAddPage() {
   const patientForm = document.getElementById("patientForm");
   const saveBtn = document.getElementById("saveBtn");
   const visitDate = document.getElementById("visitDate");
+  const statusSelect = document.getElementById("status");
 
   if (visitDate) {
     visitDate.value = toLocalDatetimeValue(new Date());
+  }
+
+  if (statusSelect) {
+    const updateAppointmentState = () => {
+      setAppointmentFieldState("appointmentDate", statusSelect.value);
+    };
+    statusSelect.addEventListener("change", updateAppointmentState);
+    updateAppointmentState();
   }
 
   initToothPickers();
@@ -522,17 +568,20 @@ function initAddPage() {
       saveBtn.disabled = true;
     }
 
+    const statusValue = document.getElementById("status").value;
     const appointmentValue = document.getElementById("appointmentDate").value;
-    const appointmentDate = appointmentValue
-      ? new Date(appointmentValue)
-      : null;
+    let appointmentDate = appointmentValue ? new Date(appointmentValue) : null;
 
-    if (!appointmentDate || Number.isNaN(appointmentDate.getTime())) {
-      setStatusText("saveStatus", "Please enter a valid appointment date.");
-      if (saveBtn) {
-        saveBtn.disabled = false;
+    if (statusValue !== "completed") {
+      if (!appointmentDate || Number.isNaN(appointmentDate.getTime())) {
+        setStatusText("saveStatus", "Please enter a valid appointment date.");
+        if (saveBtn) {
+          saveBtn.disabled = false;
+        }
+        return;
       }
-      return;
+    } else {
+      appointmentDate = null;
     }
 
     const tasks = readTasks();
@@ -561,8 +610,8 @@ function initAddPage() {
     const patientData = {
       user_id: currentUser.id,
       name: document.getElementById("patientName").value.trim(),
-      status: document.getElementById("status").value,
-      appointment_at: appointmentDate.toISOString(),
+      status: statusValue,
+      appointment_at: appointmentDate ? appointmentDate.toISOString() : null,
       tooth_position: document.getElementById("toothPosition").value,
       tooth_number: document.getElementById("toothNumber").value,
       phone,
@@ -656,6 +705,12 @@ function renderVisitList(visits) {
         card.appendChild(clinicalNotes);
       }
 
+      if (visit.spending !== undefined && visit.spending !== null) {
+        const spending = document.createElement("div");
+        spending.textContent = `Spending: ${visit.spending}`;
+        card.appendChild(spending);
+      }
+
       visitList.appendChild(card);
     });
 }
@@ -663,7 +718,6 @@ function renderVisitList(visits) {
 function populateEditForm(patient) {
   const editPatientName = document.getElementById("editPatientName");
   const editStatus = document.getElementById("editStatus");
-  const editAppointmentDate = document.getElementById("editAppointmentDate");
   const editToothPosition = document.getElementById("editToothPosition");
   const editToothNumber = document.getElementById("editToothNumber");
   const editPatientPhone = document.getElementById("editPatientPhone");
@@ -674,11 +728,6 @@ function populateEditForm(patient) {
   }
   if (editStatus) {
     editStatus.value = patient.status || "active";
-  }
-  if (editAppointmentDate && patient.appointment_at) {
-    editAppointmentDate.value = toLocalDatetimeValue(
-      new Date(patient.appointment_at),
-    );
   }
   if (editToothPosition) {
     editToothPosition.value = patient.tooth_position || "";
@@ -705,6 +754,10 @@ function renderPatientDetail(patient) {
   const patientPhone = document.getElementById("patientPhone");
   const patientAddress = document.getElementById("patientAddress");
   const callPatientBtn = document.getElementById("callPatientBtn");
+  const nextAppointmentDate = document.getElementById("nextAppointmentDate");
+  const visitLengthNotes = document.getElementById("visitLengthNotes");
+  const visitClinicalNotes = document.getElementById("visitClinicalNotes");
+  const visitSpending = document.getElementById("visitSpending");
   const photoStrip = document.getElementById("photoStrip");
 
   if (patientTitle) {
@@ -716,8 +769,7 @@ function renderPatientDetail(patient) {
     )}`;
   }
   if (patientStatus) {
-    patientStatus.textContent =
-      patient.status === "completed" ? "Completed" : "Active";
+    patientStatus.textContent = formatStatusLabel(patient.status);
   }
   if (patientAppointment) {
     patientAppointment.textContent = formatAppointment(patient.appointment_at);
@@ -727,6 +779,40 @@ function renderPatientDetail(patient) {
       patient.tooth_position,
       patient.tooth_number,
     );
+  }
+
+  if (nextAppointmentDate) {
+    if (
+      patient.appointment_at &&
+      normalizeStatus(patient.status) !== "completed"
+    ) {
+      nextAppointmentDate.value = toLocalDatetimeValue(
+        new Date(patient.appointment_at),
+      );
+    } else {
+      nextAppointmentDate.value = "";
+    }
+  }
+
+  setAppointmentFieldState(
+    "nextAppointmentDate",
+    normalizeStatus(patient.status),
+  );
+
+  if (visitLengthNotes) {
+    visitLengthNotes.value = patient.length_notes || "";
+  }
+  if (visitClinicalNotes) {
+    visitClinicalNotes.value = patient.clinical_notes || "";
+  }
+
+  if (visitSpending) {
+    const lastVisit = (patient.visits || []).slice(-1)[0];
+    const latestSpending = lastVisit?.spending ?? patient.spending;
+    visitSpending.value =
+      latestSpending !== undefined && latestSpending !== null
+        ? latestSpending
+        : "";
   }
 
   const phoneValue = patient.phone ? patient.phone.trim() : "";
@@ -835,28 +921,20 @@ function initDetailPage() {
       }
 
       setStatusText("editStatusMessage", "Saving changes...");
-      const appointmentValue = document.getElementById(
-        "editAppointmentDate",
-      ).value;
-      const appointmentDate = appointmentValue
-        ? new Date(appointmentValue)
-        : null;
-
-      if (!appointmentDate || Number.isNaN(appointmentDate.getTime())) {
-        setStatusText("editStatusMessage", "Please enter a valid date.");
-        return;
-      }
-
+      const statusValue = document.getElementById("editStatus").value;
       const updates = {
         name: document.getElementById("editPatientName").value.trim(),
-        status: document.getElementById("editStatus").value,
-        appointment_at: appointmentDate.toISOString(),
+        status: statusValue,
         tooth_position: document.getElementById("editToothPosition").value,
         tooth_number: document.getElementById("editToothNumber").value,
         phone: document.getElementById("editPatientPhone").value.trim(),
         address: document.getElementById("editPatientAddress").value.trim(),
         updated_at: new Date().toISOString(),
       };
+
+      if (statusValue === "completed") {
+        updates.appointment_at = null;
+      }
 
       const { error } = await supabaseClient
         .from("patients")
@@ -881,11 +959,33 @@ function initDetailPage() {
       }
 
       setStatusText("visitStatus", "Saving visit...");
+      const statusValue =
+        document.getElementById("editStatus")?.value ||
+        currentPatient?.status ||
+        "active";
+      const isCompleted = statusValue === "completed";
       const visitValue = document.getElementById("visitDate").value;
       const visitDateValue = visitValue ? new Date(visitValue) : null;
+      const nextAppointmentValue = document.getElementById(
+        "nextAppointmentDate",
+      ).value;
+      const nextAppointmentDate = nextAppointmentValue
+        ? new Date(nextAppointmentValue)
+        : null;
 
       if (!visitDateValue || Number.isNaN(visitDateValue.getTime())) {
         setStatusText("visitStatus", "Please enter a valid visit date.");
+        return;
+      }
+
+      if (
+        !isCompleted &&
+        (!nextAppointmentDate || Number.isNaN(nextAppointmentDate.getTime()))
+      ) {
+        setStatusText(
+          "visitStatus",
+          "Please enter a valid next appointment date.",
+        );
         return;
       }
 
@@ -896,12 +996,22 @@ function initDetailPage() {
       const clinicalNotes = document
         .getElementById("visitClinicalNotes")
         .value.trim();
+      const spendingValue = document
+        .getElementById("visitSpending")
+        .value.trim();
+      const spending = spendingValue ? Number(spendingValue) : null;
+
+      if (spendingValue && (Number.isNaN(spending) || spending < 0)) {
+        setStatusText("visitStatus", "Please enter a valid spending amount.");
+        return;
+      }
 
       const newVisit = {
         date: visitDateValue.toISOString(),
         tasks,
         length_notes: lengthNotes,
         clinical_notes: clinicalNotes,
+        spending,
       };
 
       const visits = [...(currentPatient?.visits || []), newVisit];
@@ -910,8 +1020,16 @@ function initDetailPage() {
         tasks,
         length_notes: lengthNotes,
         clinical_notes: clinicalNotes,
+        spending,
         updated_at: new Date().toISOString(),
       };
+
+      if (!isCompleted && nextAppointmentDate) {
+        updates.appointment_at = nextAppointmentDate.toISOString();
+      }
+      if (isCompleted) {
+        updates.appointment_at = null;
+      }
 
       const files = Array.from(
         document.getElementById("visitPhotos").files || [],
@@ -943,11 +1061,48 @@ function initDetailPage() {
         document.getElementById("visitDate").value = toLocalDatetimeValue(
           new Date(),
         );
+        if (!isCompleted && nextAppointmentDate) {
+          document.getElementById("nextAppointmentDate").value =
+            toLocalDatetimeValue(nextAppointmentDate);
+        } else {
+          document.getElementById("nextAppointmentDate").value = "";
+        }
+        const visitSpendingInput = document.getElementById("visitSpending");
+        if (visitSpendingInput) {
+          visitSpendingInput.value =
+            spending !== null && spending !== undefined ? spending : "";
+        }
+        setAppointmentFieldState("nextAppointmentDate", statusValue);
         setStatusText("visitStatus", "Visit saved.");
         loadPatient(patientId);
       } catch (error) {
         setStatusText("visitStatus", `Error: ${error.message}`);
       }
+    });
+  }
+
+  const visitList = document.getElementById("visitList");
+  const toggleHistoryBtn = document.getElementById("toggleHistoryBtn");
+  if (visitList && toggleHistoryBtn) {
+    const updateLabel = () => {
+      const isHidden = visitList.classList.contains("hidden");
+      toggleHistoryBtn.textContent = isHidden
+        ? "Show visit history"
+        : "Hide visit history";
+      toggleHistoryBtn.setAttribute("aria-expanded", String(!isHidden));
+    };
+
+    toggleHistoryBtn.addEventListener("click", () => {
+      visitList.classList.toggle("hidden");
+      updateLabel();
+    });
+    updateLabel();
+  }
+
+  const editStatus = document.getElementById("editStatus");
+  if (editStatus) {
+    editStatus.addEventListener("change", () => {
+      setAppointmentFieldState("nextAppointmentDate", editStatus.value);
     });
   }
 

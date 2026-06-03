@@ -224,6 +224,21 @@ small {
   color: #ffc07a;
 }
 
+.status-chip[data-status="pending"] {
+  background: rgba(98, 181, 255, 0.18);
+  color: #9ad2ff;
+}
+
+.status-chip[data-status="pending"] {
+  background: rgba(98, 181, 255, 0.18);
+  color: #9ad2ff;
+}
+
+.status-chip[data-status="pending"] {
+  background: rgba(120, 163, 255, 0.2);
+  color: #c8d7ff;
+}
+
 .meta-row {
   display: flex;
   flex-wrap: wrap;
@@ -275,6 +290,16 @@ small {
   gap: 6px;
   font-size: 13px;
   color: var(--muted);
+}
+
+.field.is-disabled {
+  opacity: 0.7;
+}
+
+.field.is-disabled input,
+.field.is-disabled select,
+.field.is-disabled textarea {
+  filter: blur(1px);
 }
 
 input,
@@ -496,12 +521,35 @@ textarea:focus {
   letter-spacing: 0.4px;
 }
 
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
 .summary-actions {
   margin-top: 12px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   align-items: center;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
 }
 
 .visit-list {

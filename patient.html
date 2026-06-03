@@ -76,12 +76,9 @@
               <span>Status</span>
               <select id="editStatus">
                 <option value="active">Active</option>
+                <option value="pending">Pending</option>
                 <option value="completed">Completed</option>
               </select>
-            </label>
-            <label class="field">
-              <span>Next appointment</span>
-              <input type="datetime-local" id="editAppointmentDate" required />
             </label>
           </div>
 
@@ -421,17 +418,26 @@
       <section class="panel">
         <div class="panel-header">
           <h2>Visit history</h2>
+          <button type="button" id="toggleHistoryBtn" class="ghost">
+            Show visit history
+          </button>
         </div>
-        <div id="visitList" class="visit-list"></div>
+        <div id="visitList" class="visit-list hidden"></div>
       </section>
 
       <section class="panel">
         <h2>Add visit</h2>
         <form id="visitForm" class="form-stack">
-          <label class="field">
-            <span>Visit date</span>
-            <input type="datetime-local" id="visitDate" required />
-          </label>
+          <div class="form-grid">
+            <label class="field">
+              <span>Visit date</span>
+              <input type="datetime-local" id="visitDate" required />
+            </label>
+            <label class="field">
+              <span>Next appointment</span>
+              <input type="datetime-local" id="nextAppointmentDate" required />
+            </label>
+          </div>
 
           <div class="task-card">
             <h3>Root Canal Tasks</h3>
@@ -464,6 +470,16 @@
                 rows="3"
                 placeholder="Canal lengths, files used, key notes"
               ></textarea>
+            </label>
+            <label class="field">
+              <span>Spending (Tk)</span>
+              <input
+                type="number"
+                id="visitSpending"
+                min="0"
+                step="1"
+                placeholder="Amount in Taka"
+              />
             </label>
           </div>
 
